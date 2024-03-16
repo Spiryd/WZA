@@ -20,17 +20,18 @@ impl GaussanNumber {
         let mut a = *self;
         let mut b = *other;
         loop {
-            let (q, r) = a / b;
-            println!("q: {}, r: {}", q, r);
-            if r == Self::new(0, 0) || r.norm() < b.norm() {
-                return b;
+            let (_, r) = a / b;
+            if r == Self::new(0, 0) {
+                return b; 
             }
             a = b;
             b = r;
         }
     }
     pub fn lcm(&self, other: &Self) -> Self {
-        todo!()
+        let gcd = self.gcd(other);
+        let product = *self * *other;
+        (product / gcd).0
     }
 }
 
@@ -75,8 +76,8 @@ impl std::ops::Div for GaussanNumber {
     type Output = (GaussanNumber, GaussanNumber);
     // Division with remainder
     fn div(self, rhs: Self) -> Self::Output {
-        let real_quotient = (self.real as f64 / rhs.real as f64).round() as i64;
-        let imag_quotient = (self.imag as f64 / rhs.imag as f64).round() as i64;
+        let real_quotient = ((self.real * rhs.real + self.imag * rhs.imag) as f64 / (rhs.real * rhs.real + rhs.imag * rhs.imag) as f64).round() as i64;
+        let imag_quotient = ((self.imag * rhs.real - self.real * rhs.imag) as f64 / (rhs.real * rhs.real + rhs.imag * rhs.imag) as f64).round() as i64;
         let quotient = GaussanNumber::new(real_quotient, imag_quotient);
         let remainder = self - rhs * quotient;
         (quotient, remainder)
@@ -88,17 +89,23 @@ mod tests {
     use super::*;
     #[test]
     fn div_test() {
-        let a = GaussanNumber::new(10, 7);
-        let b = GaussanNumber::new(3, 2);
+        let a = GaussanNumber::new(6, 0);
+        let b = GaussanNumber::new(2, 1);
         let (quotient, remainder) = a / b;
-        assert_eq!(quotient, GaussanNumber::new(3, 4));
-        assert_eq!(remainder, GaussanNumber::new(9, -11));
+        assert!(remainder.norm() <= b.norm() / 2);
+        assert_eq!(quotient, GaussanNumber::new(2, -1));
+        assert_eq!(remainder, GaussanNumber::new(1, 0));
     }
     #[test]
     fn gcd_test() {
-        let a = GaussanNumber::new(4, 7);
-        let b = GaussanNumber::new(1, 3);
-        println!("{:?}", a / b);
-        assert_eq!(a.gcd(&b), GaussanNumber::new(1, 0));
+        let a = GaussanNumber::new(2, -3);
+        let b = GaussanNumber::new(3, 5);
+        assert_eq!(a.gcd(&b), GaussanNumber::new(0, 1));
     }
+    #[test]
+fn lcm_test() {
+    let a = GaussanNumber::new(10, 11);
+    let b = GaussanNumber::new(8, 1);
+    assert_eq!(a.lcm(&b), GaussanNumber::new(31, 12));
+}
 }
