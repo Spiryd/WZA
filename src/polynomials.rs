@@ -36,6 +36,15 @@ impl Polynomial {
         let product = self.clone() * other.clone();
         (product / gcd).0
     }
+    pub fn gdc_all(polynomials: &[Polynomial]) -> Polynomial {
+        polynomials.iter().fold(Self::default(), |acc, x| acc.gcd(x.clone()))
+    }
+}
+
+impl Default for Polynomial{
+    fn default() -> Self {
+        Self { coefficients: vec![0.0] }
+    }
 }
 
 impl std::fmt::Display for Polynomial {
