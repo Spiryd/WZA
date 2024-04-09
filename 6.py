@@ -16,6 +16,7 @@ class set():
         all_points = list(product(*ranges_list))
         set_points = [point for point in all_points if self.border_func(self.value_func(point))]
         shuffle(set_points)
+        print(set_points)
         return set_points
 
 def evaluate(point1: List[int], point2: List[int]) -> bool:
@@ -54,7 +55,7 @@ def border2(value: int) -> bool:
     return value <= 25
 
 def main() -> int:
-    s = set(2, func1, border)
+    s = set(2, func2, border2)
     points = s.gen_points(0, 15)
     minimal = find_minimal(points)
     print(minimal)
