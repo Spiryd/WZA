@@ -39,6 +39,14 @@ impl Polynomial {
     pub fn gdc_all(polynomials: &[Polynomial]) -> Polynomial {
         polynomials.iter().fold(Self::default(), |acc, x| acc.gcd(x.clone()))
     }
+    pub fn ext_gcd(a: Polynomial, b: Polynomial) -> (Polynomial, Polynomial, Polynomial) {
+        if b.coefficients == vec![0.0] {
+            return (a, Polynomial::new(vec![1.0]), Polynomial::new(vec![0.0]));
+        }
+        let (q, r) = a.clone() / b.clone();
+        let (d, s, t) = Self::ext_gcd(b.clone(), r);
+        (d, t.clone(), s - q * t)
+    }
 }
 
 impl Default for Polynomial{
