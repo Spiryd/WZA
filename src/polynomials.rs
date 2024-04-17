@@ -1,4 +1,4 @@
-#[derive(Debug, Clone)]
+#[derive(Debug, Clone, PartialEq)]
 pub struct Polynomial {
     coefficients: Vec<f64>,
 }
@@ -207,5 +207,14 @@ mod tests {
         let p2 = Polynomial::new(vec![-6., -5., 1.]);
         let p3 = p1.lcm(p2);
         assert_eq!(p3.coefficients, vec![-3., -3., 1./12., 1./12.]);
+    }
+
+    #[test]
+    fn test_ext_gdc() {
+        let p1 = Polynomial::new(vec![6., 7., 1.]);
+        let p2 = Polynomial::new(vec![-6., -5., 1.]);
+        let (d, s, t) = Polynomial::ext_gcd(p1.clone(), p2.clone());
+        assert_eq!(d, p1.clone() * s + p2.clone() * t);
+        assert_eq!(p1.gcd(p2), d);
     }
 }
