@@ -41,7 +41,7 @@ def plot_conchoid_for_all_a(a_values, filename=None):
 
     plt.xlabel('x')
     plt.ylabel('y')
-    plt.title(f'Conchoida Slusa dla wartości a={a}')
+    plt.title(f'Conchoida Slusa dla wartości a={a_values}')
     plt.axhline(0, color='black',linewidth=0.5)
     plt.axvline(0, color='black',linewidth=0.5)
     plt.xlim(-10, 10)
